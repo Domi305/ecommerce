@@ -2,7 +2,7 @@
 
 CREATE TABLE products (
 
-    id BIGINT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
     title VARCHAR(255) NOT NULL,
 

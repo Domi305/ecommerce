@@ -1,11 +1,11 @@
 package pl.github.dominik.ecommerce.domain;
 
 import lombok.Data;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "products")
 @Data
 public class Product {
 
@@ -25,7 +25,7 @@ public class Product {
     // private ProductCategory category;
 
     @Column(name = "price", nullable = false)
-    private double price; //tylko jezeli nie mnozymy albo dodajemy
+    private double price; //jezeli nie mnozymy albo dodajemy
 
     // private Enum<?> type;
 

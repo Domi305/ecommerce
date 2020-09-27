@@ -15,5 +15,5 @@ public class ProductDto {
 
     private String thumbnailUrl;
 
-    private double price;
+    private Double price;
 }

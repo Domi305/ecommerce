@@ -18,7 +18,12 @@ class ProductDomainDtoConverter {
     }
 
     public Product convert(ProductDto product) {
-        val result = new Product()
+        val result = new Product();
         result.setId(product.getId());
+        result.setTitle(product.getTitle());
+        result.setDescription(product.getDescription());
+        result.setThumbnailUrl(product.getThumbnailUrl());
+        result.setPrice(product.getPrice());
+        return result;
     }
 }
