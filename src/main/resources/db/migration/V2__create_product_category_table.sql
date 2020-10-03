@@ -6,7 +6,7 @@ CREATE TABLE product_categories (
 
     name VARCHAR(255) NOT NULL,
 
-    parent_Category BIGINT NOT NULL,
+    parent_Category BIGINT,
 
     FOREIGN KEY (parent_Category) REFERENCES product_categories
         (id)

@@ -1,5 +1,6 @@
 package pl.github.dominik.ecommerce.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,59 +9,46 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.Errors;
-import pl.github.dominik.ecommerce.application.ProductDto;
-import pl.github.dominik.ecommerce.application.ProductService;
+import pl.github.dominik.ecommerce.SampleDataTestConfiguration;
+import pl.github.dominik.ecommerce.configuration.SampleDataFixture;
 
-import org.springframework.data.domain.Pageable;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(SampleDataTestConfiguration.class)
 public class ProductControllerTest {
 
     private static final Pageable ALL_PRODUCTS_PAGE = PageRequest.of(0, 9999);
 
     @Autowired
-    private ProductController productController;
-
-    @Autowired
-    private ProductService service;
-
-    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private SampleDataFixture fixture;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
-        service.add(ProductDto.builder()
-                .title("Sample product 1")
-                .description("Some description")
-                .thumbnailUrl("http://who.car.es")
-                .price(9.99)
-                .build());
-
-        service.add(ProductDto.builder()
-                .title("Sample product 2")
-                .description("some description")
-                .thumbnailUrl("http://who.car.es")
-                .price(9.99)
-                .build());
+        fixture.save();
     }
 
     @AfterEach
     public void tearDown() {
-        val allProducts = service.list(ALL_PRODUCTS_PAGE);
-        allProducts.forEach(service::remove);
+        fixture.remove();
     }
 
     @Test
@@ -68,35 +56,39 @@ public class ProductControllerTest {
         mockMvc.perform(get("/products?page=0&size=20"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()",is(2)));
+                .andExpect(jsonPath("$.length()", is(2)));
     }
 
     @Test
     public void gettingExistingProduct() throws Exception {
-        val product = service.list(PageRequest.of(0,1)).getContent().get(0);
+        val product = fixture.buty();
 
         mockMvc.perform(get("/products" + product.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$.length()", is(8)))
                 .andExpect(jsonPath("$.id", is(product.getId().intValue())))
                 .andExpect(jsonPath("$.title", is(product.getTitle())))
                 .andExpect(jsonPath("$.description", is(product.getDescription())))
                 .andExpect(jsonPath("$.thumbnailUrl", is(product.getThumbnailUrl())))
-                .andExpect(jsonPath("$.price", is(product.getPrice())));
+                .andExpect(jsonPath("$.price", is(product.getPrice())))
+                .andExpect(jsonPath("$.type", is(product.getType().name())))
+                .andExpect(jsonPath("$.category.id", is(closeTo(product.getCategory().getId(), 0))))
+                .andExpect(jsonPath("$.author.id", is(closeTo(product.getAuthor().getId(), 0))));
     }
 
     @Test
     public void gettingNotExistingProduct() throws Exception {
-        mockMvc.perform(get("/products"+ 999_999))
+        mockMvc.perform(get("/products" + 999_999))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void addingNeProduct() throws Exception {
+    public void addingNewProduct() throws Exception {
+        String payload = objectMapper.writeValueAsString(fixture.szmata());
         mockMvc.perform(post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\": \"Sample product added\", \"description\": \"bla bla bla\", \"thumbnailUrl\": \"http://who.car.es\", \"price\": 5.00}"))
+                .content(payload))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
     }

@@ -12,13 +12,13 @@ import java.util.Objects;
 import java.util.Set;
 
 @Component
-public final class ProductValidator implements Validator {
+public final class CreateProductRequestValidator implements Validator {
 
     private  static  final Set<String> productTypes = Set.of("DOMESTIC", "FOOD", "CLOTHES", "SHOES");
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return Objects.equals(aClass, ProductDto.class);
+        return Objects.equals(aClass, CreateProductRequest.class);
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class ProductValidator implements Validator {
         val product = (CreateProductRequest) o;
 
         if (StringUtils.isEmpty(product.getTitle())) {
-            errors.rejectValue("id", "PRESENT");
+            errors.rejectValue("id", "EMPTY");
         } else if (product.getTitle().length() >= 512) {
             errors.rejectValue("title", "TOO_LONG");
         }
@@ -38,7 +38,7 @@ public final class ProductValidator implements Validator {
         }
 
         // TODO: validate URL
-        if (StringUtils.isEmpty(product.getTitle())) {
+        if (StringUtils.isEmpty(product.getThumbnailUrl())) {
             errors.rejectValue("thumbnailUrl", "EMPTY");
         } else if (product.getTitle().length()>= 512) {
             errors.rejectValue("thumbnailUrl", "TOO_LONG");
@@ -49,7 +49,7 @@ public final class ProductValidator implements Validator {
         }
 
         if (product.getAuthorId() == null) {
-            errors.rejectValue("price", "ABSENT");
+            errors.rejectValue("authorId", "ABSENT");
         }
 
         if (product.getCategoryId() == null) {

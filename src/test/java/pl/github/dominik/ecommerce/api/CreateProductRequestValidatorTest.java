@@ -4,6 +4,7 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.validation.Errors;
+import pl.github.dominik.ecommerce.application.CreateProductRequest;
 import pl.github.dominik.ecommerce.application.ProductDto;
 
 import java.util.Objects;
@@ -13,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class ProductValidatorTest {
+class CreateProductRequestValidatorTest {
 
-    private ProductValidator validator = new ProductValidator();
+    private CreateProductRequestValidator validator = new CreateProductRequestValidator();
 
     @Test
     void supportsProductDtoClass() {
@@ -35,9 +36,9 @@ class ProductValidatorTest {
         validator.validate(product, errors);
 
         verify(errors, times(0)).rejectValue(anyString(), anyString());
-        }
+    }
 
-        @Test
+/*    @Test
     void aProductWithIdSetShouldTriggerOneError() {
         val product = aProductHavingIdSet();
         val errors = mock(Errors.class);
@@ -49,7 +50,7 @@ class ProductValidatorTest {
         verify(errors, times(1)).rejectValue(fieldNameCapture.capture(), errorCodeCapture.capture());
         assertThat(fieldNameCapture.getValue()).isEqualTo("id");
         assertThat(errorCodeCapture.getValue()).isEqualTo("PRESENT");
-    }
+    }*/
 
     @Test
     void aProductHavingTooLongDescriptionShouldTriggerOneError() {
@@ -65,16 +66,19 @@ class ProductValidatorTest {
         assertThat(errorCodeCapture.getValue()).isEqualTo("TOO_LONG");
     }
 
-    public ProductDto aValidProduct() {
-        return ProductDto.builder()
+    public CreateProductRequest aValidProduct() {
+        return CreateProductRequest.builder()
                 .title("Test Product")
                 .description("Some description")
-                .thumbnailUrl("https://")
+                .thumbnailUrl("https://wow.olympus.eu/webfile/img/1632/oly_testwow_stage.jpg?x=1024")
                 .price(9.99)
+                .authorId(123L)
+                .categoryId(456L)
+                .type("CLOTHES")
                 .build();
     }
 
-    public ProductDto aProductHavingIdSet() {
+/*    public ProductDto aProductHavingIdSet() {
         return ProductDto.builder()
                 .id(123L)
                 .title("Test product")
@@ -82,14 +86,17 @@ class ProductValidatorTest {
                 .thumbnailUrl("https://wow.olympus.eu/webfile/img/1632/oly_testwow_stage.jpg?x=1024")
                 .price(9.99)
                 .build();
-    }
+    }*/
 
-    public ProductDto aProductHavingTooLongDescription() {
-        return ProductDto.builder()
-                .title("Test prod")
-                .description("another test".repeat(200))
+    public CreateProductRequest aProductHavingTooLongDescription() {
+        return CreateProductRequest.builder()
+                .title("Test product")
+                .description("test ".repeat(200))
                 .thumbnailUrl("https://wow.olympus.eu/webfile/img/1632/oly_testwow_stage.jpg?x=1024")
                 .price(9.99)
+                .authorId(123L)
+                .categoryId(456L)
+                .type("CLOTHES")
                 .build();
     }
 }
