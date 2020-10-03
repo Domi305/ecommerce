@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import pl.github.dominik.ecommerce.domain.Product;
 import pl.github.dominik.ecommerce.domain.ProductRepository;
 
 import javax.transaction.Transactional;
@@ -25,6 +26,12 @@ public class ProductService {
 
     public Optional<ProductDto> get(long id) {
         return repository.findById(id).map(converter::convert);
+    }
+
+    public ProductDto add(CreateProductRequest createProductRequest) {
+        var product = converter.convert(createProductRequest);
+        product = repository.save(product);
+        return converter.convert(product);
     }
 
     public ProductDto add(ProductDto productDto) {

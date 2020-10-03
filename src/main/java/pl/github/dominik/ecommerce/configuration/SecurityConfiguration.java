@@ -1,4 +1,5 @@
 package pl.github.dominik.ecommerce.configuration;
+/*
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;
@@ -15,3 +16,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/").permitAll();
     }
 }
+*/
