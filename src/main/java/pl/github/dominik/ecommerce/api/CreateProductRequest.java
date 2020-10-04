@@ -1,4 +1,4 @@
-package pl.github.dominik.ecommerce.application;
+package pl.github.dominik.ecommerce.api;
 
 import lombok.Builder;
 import lombok.Value;

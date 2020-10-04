@@ -7,7 +7,6 @@ import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import pl.github.dominik.ecommerce.application.CreateProductRequest;
 import pl.github.dominik.ecommerce.application.ProductDto;
 import pl.github.dominik.ecommerce.application.ProductService;
 
@@ -22,7 +21,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    private final CreateProductRequestValidator createProductRequestValidator;
+    private final CreateProductCategoryRequestValidator createProductRequestValidator;
 
     @GetMapping(path = "")
     public List<ProductDto> listProducts(Pageable page) {
@@ -30,22 +29,22 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity <ProductDto> getProduct(@PathVariable long id) {
+    public ResponseEntity<ProductDto> getProduct(@PathVariable long id) {
         return productService.get(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path = "", consumes = "application/json")
-    public ResponseEntity<Void> addProduct(@RequestBody CreateProductRequest request, Errors errors) {
+    public ResponseEntity<Errors> addProduct(@RequestBody CreateProductRequest request, Errors errors) {
         createProductRequestValidator.validate(request, errors);
 
         if (!errors.hasErrors()) {
             val product = productService.add(request);
             val link = ControllerLinkBuilder.linkTo(methodOn(ProductController.class).getProduct(product.getId()));
-        return ResponseEntity.created(link.toUri()).build();
+            return ResponseEntity.created(link.toUri()).build();
         } else {
-        return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
     }
 }

@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.github.dominik.ecommerce.domain.Product;
+import pl.github.dominik.ecommerce.api.CreateProductRequest;
 import pl.github.dominik.ecommerce.domain.ProductRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,5 +47,9 @@ public class ProductService {
 
     public void remove(long productId) {
         repository.deleteById(productId);
+    }
+
+    public Page<ProductDto> findByAuthor(long productCategoryId, @NonNull Pageable page) {
+        return repository.findByCategoryId(productCategoryId, page).map(converter::convert);
     }
 }

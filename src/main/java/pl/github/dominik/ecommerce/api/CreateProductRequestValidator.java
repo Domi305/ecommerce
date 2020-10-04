@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import pl.github.dominik.ecommerce.application.CreateProductRequest;
-import pl.github.dominik.ecommerce.application.ProductDto;
 
 import java.util.Objects;
 import java.util.Set;

@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 import pl.github.dominik.ecommerce.domain.ProductCategory;
 import pl.github.dominik.ecommerce.domain.ProductCategoryRepository;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 @Service
 @Transactional
@@ -30,18 +28,17 @@ public class ProductCategoryService {
         var entity = new ProductCategory();
         entity.setName(name);
 
-        repository.findById(parentCategoryId)
-                .ifPresentOrElse(entity::setParentCategory, () -> {
-                    throw new ProductCategoryNotFound(parentCategoryId);
-                });
+        Optional.ofNullable(parentCategoryId)
+                .flatMap(repository::findById)
+                .ifPresent(entity::setParentCategory);
 
         entity = repository.save(entity);
         return converter.convert(entity);
     }
 
     public void removeOne(long categoryId) {
-        repository.findById(categoryId).ifPresent (category -> {
-            for (final ProductCategory childCategory: category.getChildrenCategories()) {
+        repository.findById(categoryId).ifPresent(category -> {
+            for (final ProductCategory childCategory : category.getChildrenCategories()) {
                 childCategory.setParentCategory(category.getParentCategory());
             }
             repository.delete(category);
@@ -51,22 +48,23 @@ public class ProductCategoryService {
     public void removeAll(long categoryId) {
         repository.findById(categoryId).ifPresent(category -> {
             // 2 queues to avoid recursion
-            Deque<ProductCategory> productCategoriestoDelete = new LinkedList<>();
-            Queue<ProductCategory> productCategoriestoProcess = new LinkedList<>();
+            Deque<ProductCategory> productCategoriesToDelete = new LinkedList<>();
+            Queue<ProductCategory> productCategoriesToProcess = new LinkedList<>();
 
-            productCategoriestoProcess.add(category);
+            productCategoriesToProcess.add(category);
 
-            while (!productCategoriestoProcess.isEmpty()) {
-                val productCategory = productCategoriestoProcess.poll();
-                productCategoriestoDelete.addFirst(productCategory);
-                productCategoriestoProcess.addAll(productCategory.getChildrenCategories());
+            while (!productCategoriesToProcess.isEmpty()) {
+                val productCategory = productCategoriesToProcess.poll();
+                productCategoriesToDelete.addFirst(productCategory);
+                productCategoriesToProcess.addAll(productCategory.getChildrenCategories());
             }
 
-            while (!productCategoriestoDelete.isEmpty()) {
-                repository.delete(productCategoriestoDelete.pollFirst());
+            while (!productCategoriesToDelete.isEmpty()) {
+                repository.delete(productCategoriesToDelete.pollFirst());
             }
         });
     }
+
     //or:
     //recursion - might lead to running out of memory
     @SuppressWarnings("unused")
@@ -82,5 +80,21 @@ public class ProductCategoryService {
         //5. removeAll(D)
         //5. repository.delete(B);
         //6. repository.delete(A);
+    }
+
+    public List<ProductCategoryDto> list(Long rootProductCategoryId) {
+
+        List<ProductCategoryDto> result = new LinkedList<>();
+        Queue<ProductCategory> queue = new LinkedList<>();
+
+        queue.addAll(repository.findByParentCategoryId(rootProductCategoryId));
+
+        while (!queue.isEmpty()) {
+            val productCategory = queue.poll();
+            result.add(converter.convert(productCategory));
+            queue.addAll(productCategory.getChildrenCategories());
+        }
+
+        return result;
     }
 }

@@ -1,8 +1,8 @@
 package pl.github.dominik.ecommerce.application;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Component;
+import pl.github.dominik.ecommerce.api.CreateProductRequest;
 import pl.github.dominik.ecommerce.domain.*;
 
 @Component

@@ -23,7 +23,7 @@ public class Product {
     @Column(name = "thumbnailUrl", nullable = false)
     private String thumbnailUrl;
 
-    @OneToOne(optional = false, orphanRemoval = true)
+    @OneToOne(optional = false)
     @JoinColumn(name = "category")
     private ProductCategory category;
 

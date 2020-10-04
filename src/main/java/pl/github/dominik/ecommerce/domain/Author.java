@@ -6,9 +6,9 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "authors")
 @Data
 public class Author {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // kontroluje sposob w jaki ID sie generuje

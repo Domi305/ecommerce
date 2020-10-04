@@ -4,8 +4,6 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.validation.Errors;
-import pl.github.dominik.ecommerce.application.CreateProductRequest;
-import pl.github.dominik.ecommerce.application.ProductDto;
 
 import java.util.Objects;
 
@@ -18,9 +16,10 @@ class CreateProductRequestValidatorTest {
 
     private CreateProductRequestValidator validator = new CreateProductRequestValidator();
 
+    //TODO rename
     @Test
     void supportsProductDtoClass() {
-        assertTrue(validator.supports(ProductDto.class));
+        assertTrue(validator.supports(CreateProductRequest.class));
     }
 
     @Test
