@@ -36,6 +36,28 @@ public class ProductCategoryService {
         return converter.convert(entity);
     }
 
+    public Optional<ProductCategoryDto> rename(long categoryId, String name) {
+        return repository.findById(categoryId)
+                .map(category -> {
+                    category.setName(name);
+                    return category;
+                })
+                .map(converter::convert);
+    }
+
+    public Optional<ProductCategoryDto> changeParentCategory(long categoryId, Long parentCategoryId) {
+        return repository.findById(categoryId)
+                .map(category -> {
+                    if (parentCategoryId != null) {
+                        repository.findById(parentCategoryId).ifPresent(category::setParentCategory);
+                    } else {
+                        category.setParentCategory(null);
+                    }
+                    return category;
+                })
+                .map(converter::convert);
+    }
+
     public void removeOne(long categoryId) {
         repository.findById(categoryId).ifPresent(category -> {
             for (final ProductCategory childCategory : category.getChildrenCategories()) {

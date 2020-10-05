@@ -49,6 +49,23 @@ public class ProductCategoryController {
         }
     }
 
+    @PutMapping(path = "/{productCategoryId}", consumes = "application/json")
+    public ResponseEntity<ProductCategoryDto> updateProductCategory(@PathVariable long productCategoryId,
+                                                                    @RequestBody CreateProductCategoryRequest request, Errors errors) {
+        createProductCategoryRequestValidator.validate(request, errors);
+
+        if (!errors.hasErrors()) {
+            productCategoryService.rename(productCategoryId, request.getName());
+            productCategoryService.changeParentCategory(productCategoryId, request.getParentCategoryId());
+
+            return productCategoryService.get(productCategoryId)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @DeleteMapping(path = "/{productCategoryId}", consumes = "application/json")
     public ResponseEntity<Errors> removeProductCategory(@PathVariable long productCategoryId,@RequestParam(defaultValue = "false") boolean wholeSubtree) {
         if (anyProductsRelated(productCategoryId)) {

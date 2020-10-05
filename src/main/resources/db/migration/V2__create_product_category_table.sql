@@ -8,6 +8,5 @@ CREATE TABLE product_categories (
 
     parent_Category BIGINT,
 
-    FOREIGN KEY (parent_Category) REFERENCES product_categories
-        (id)
+    FOREIGN KEY (parent_Category) REFERENCES product_categories(id)
 );

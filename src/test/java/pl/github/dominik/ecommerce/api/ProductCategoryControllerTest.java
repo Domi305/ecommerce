@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -101,6 +99,21 @@ public class ProductCategoryControllerTest {
     }
 
     @Test
+    public void updatingExistingProductCategory() throws Exception {
+        CreateProductCategoryRequest request = new CreateProductCategoryRequest("Renamed", null);
+        String payload = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(put("/products/categories/" + fixture.childClothes().getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(3)))
+                .andExpect(jsonPath("$.id", is(fixture.childClothes().getId().intValue())))
+                .andExpect(jsonPath("$.name", is("Renamed")))
+                .andExpect(jsonPath("$.parentCategoryId", is(nullValue())));
+    }
+
+    @Test
     public void deletingOnlyOneProductCategory() throws Exception {
 
         mockMvc.perform(delete("/products/categories/" + fixture.drinks().getId())
@@ -127,11 +140,11 @@ public class ProductCategoryControllerTest {
 
         mockMvc.perform(get("/products/categories/" + fixture.fizzyDrinks().getId())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
 
         mockMvc.perform(get("/products/categories/" + fixture.stillDrinks().getId())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNotFound());
     }
 
     @Test

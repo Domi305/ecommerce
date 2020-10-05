@@ -5,5 +5,6 @@ CREATE TABLE authors (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
     first_Name VARCHAR(255) NOT NULL,
+
     last_Name VARCHAR(255) NOT NULL
 );
