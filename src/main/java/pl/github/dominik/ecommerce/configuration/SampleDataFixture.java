@@ -28,6 +28,10 @@ public class SampleDataFixture {
     @Getter(AccessLevel.NONE)
     private final ProductCategoryRepository productCategoryRepository;
 
+    @Getter(AccessLevel.NONE)
+    private final UserRepository userRepository;
+
+    @Getter(AccessLevel.NONE)
     private final EntityManager entityManager;
 
     private Author janKowalski;
@@ -42,6 +46,8 @@ public class SampleDataFixture {
     private ProductCategory fizzyDrinks;
     private Product szmata;
     private Product buty;
+    private User customer;
+    private User admin;
 
     public boolean shouldBeSaved() {
         return authorRepository.count() == 0 &&
@@ -81,6 +87,30 @@ public class SampleDataFixture {
                 .author(janKowalski)
                 .category(clothes)
                 .type(ProductType.CLOTHES)
+                .build());
+
+        admin = userRepository.save(User.builder()
+                .login("admmin@example.com")
+                .password(new byte[] {})
+                .role(User.Role.ADMIN)
+                .contactPreference(User.ContactPreference.EMAIL)
+                .avatarUrl("http://google.com")
+                .country("Nowhere")
+                .city("Nowhere")
+                .street("Homeless")
+                .zipCode("00-000")
+                .build());
+
+        customer = userRepository.save(User.builder()
+                .login("customer@example.com")
+                .password(new byte[] {})
+                .role(User.Role.CUSTOMER)
+                .contactPreference(User.ContactPreference.EMAIL)
+                .avatarUrl("http://google.com")
+                .country("Nowhere")
+                .city("Nowhere")
+                .street("Homeless")
+                .zipCode("00-000")
                 .build());
     }
 

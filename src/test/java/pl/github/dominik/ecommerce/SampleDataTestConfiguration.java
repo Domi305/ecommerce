@@ -6,6 +6,7 @@ import pl.github.dominik.ecommerce.configuration.SampleDataFixture;
 import pl.github.dominik.ecommerce.domain.AuthorRepository;
 import pl.github.dominik.ecommerce.domain.ProductCategoryRepository;
 import pl.github.dominik.ecommerce.domain.ProductRepository;
+import pl.github.dominik.ecommerce.domain.UserRepository;
 
 import javax.persistence.EntityManager;
 
@@ -16,7 +17,8 @@ public class SampleDataTestConfiguration {
     public SampleDataFixture sampleDataFixture(AuthorRepository authorRepository,
                                                ProductCategoryRepository productCategoryRepository,
                                                ProductRepository productRepository,
+                                               UserRepository userRepository,
                                                EntityManager entityManager) {
-        return new SampleDataFixture(authorRepository, productRepository, productCategoryRepository, entityManager);
+        return new SampleDataFixture(authorRepository, productRepository, productCategoryRepository, userRepository, entityManager);
     }
 }
