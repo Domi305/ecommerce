@@ -1,10 +1,17 @@
 package pl.github.dominik.ecommerce.domain;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import pl.github.dominik.ecommerce.domain.Address;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -12,14 +19,14 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // kontroluje sposob w jaki ID sie generuje
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "login", nullable = false)
     private String login;
 
     @Column(name = "password", nullable = false)
-    private @NonNull byte[] password;
+    private byte[] password;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -27,33 +34,16 @@ public class User {
 
     private Address address;
 
+    @Column(name = "avatar_url", nullable = false)
+    private String avatarUrl;
+
     @Column(name = "contact_preference", nullable = false)
     @Enumerated(EnumType.STRING)
     private ContactPreference contactPreference;
 
-    @Column(name = "avatar_Url", nullable = false)
-    private String avatarUrl;
-
     public enum Role {
         ADMIN,
         CUSTOMER
-    }
-
-    @Embeddable
-    @Data
-    public static class Address {
-
-        @Column(name = "country", nullable = false)
-        private String country;
-
-        @Column(name = "city", nullable = false)
-        private String city;
-
-        @Column(name = "street", nullable = false)
-        private String street;
-
-        @Column(name = "zip_code", nullable = false)
-        private String zipCode;
     }
 
     public enum ContactPreference {
@@ -61,6 +51,7 @@ public class User {
         EMAIL
     }
 
+    @SuppressWarnings("unused")  // needed by Hibernate
     protected User() {
     }
 
