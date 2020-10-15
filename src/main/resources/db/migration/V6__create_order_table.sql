@@ -26,7 +26,7 @@ CREATE TABLE orders (
 
     total_cost DECIMAL(10, 2) NOT NULL,
 
-    state VARCHAR(11) NOT NULL
+    state VARCHAR(11) NOT NULL,
 
                     FOREIGN KEY (customer) REFERENCES users(id)
 
@@ -44,4 +44,4 @@ CREATE TABLE order_entries (
     count DECIMAL(6, 0) NOT NULL,
 
     FOREIGN KEY (product) REFERENCES products(id)
-)
+);

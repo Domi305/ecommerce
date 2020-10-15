@@ -2,7 +2,7 @@ package pl.github.dominik.ecommerce.application;
 
 import lombok.Value;
 
-    @Value
+@Value
 public class AddressDto {
 
     private String country;

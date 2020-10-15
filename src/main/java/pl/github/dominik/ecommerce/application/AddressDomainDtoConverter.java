@@ -7,7 +7,7 @@ import pl.github.dominik.ecommerce.domain.Address;
 @Component
 class AddressDomainDtoConverter {
 
-    public Address convert(Address address) {
+    public AddressDto convert(Address address) {
         if (address == null) {
             return null;
         }

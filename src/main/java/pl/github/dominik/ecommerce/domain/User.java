@@ -1,17 +1,10 @@
 package pl.github.dominik.ecommerce.domain;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import pl.github.dominik.ecommerce.domain.Address;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -26,7 +19,7 @@ public class User {
     private String login;
 
     @Column(name = "password", nullable = false)
-    private byte[] password;
+    private String password;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -58,7 +51,7 @@ public class User {
     @Builder
     private User(Long id,
                  @NonNull String login,
-                 @NonNull byte[] password,
+                 @NonNull String password,
                  @NonNull Role role,
                  @NonNull String avatarUrl,
                  @NonNull ContactPreference contactPreference,
