@@ -1,6 +1,7 @@
 package pl.github.dominik.ecommerce.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import pl.github.dominik.ecommerce.domain.UserRepository;
 import java.util.Collection;
 import java.util.Collections;
 
+@Primary
 @Service
 @Transactional
 @RequiredArgsConstructor

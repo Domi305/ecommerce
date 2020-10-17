@@ -1,17 +1,14 @@
 package pl.github.dominik.ecommerce.configuration;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -21,10 +18,9 @@ public class UserCredentialsAuthenticationSuccessHandler implements Authenticati
     private final long expirationTime;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        val principal = (UserDetails) authentication.getPrincipal();
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         val token = JWT.create()
-                .withSubject(principal.getUsername())
+                .withSubject((String) authentication.getPrincipal())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(Algorithm.HMAC256(secret));
 
