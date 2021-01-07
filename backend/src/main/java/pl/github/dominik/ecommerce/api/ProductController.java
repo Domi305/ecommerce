@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.ProductDto;
@@ -17,16 +18,24 @@ import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.metho
 @RestController
 @RequestMapping(path = "products", produces = "application/json")
 @RequiredArgsConstructor
-public class ProductController {
+public class  ProductController {
 
     private final ProductService productService;
 
     private final CreateProductCategoryRequestValidator createProductRequestValidator;
 
+
     @GetMapping(path = "")
-    public List<ProductDto> listProducts(Pageable page) {
-        return productService.list(page).toList();
+    public List<ProductDto> listProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+    Pageable page) {
+        return productService.search(name, type, categoryId, minPrice, maxPrice, page).toList();
     }
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable long id) {
@@ -34,6 +43,7 @@ public class ProductController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<Errors> addProduct(@RequestBody CreateProductRequest request, Errors errors) {

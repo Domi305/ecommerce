@@ -18,6 +18,6 @@ public class Address {
     @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "zip code", nullable = false)
+    @Column(name = "zip_code", nullable = false)
     private String zipCode;
 }

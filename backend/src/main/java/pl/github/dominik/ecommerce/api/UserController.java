@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.ProductDto;
@@ -26,10 +27,12 @@ public class UserController {
 
     private final UserRegistrationRequestValidator userRegistrationRequestValidator;
 
+
     @GetMapping(path = "")
     public List<UserDto> listUsers(Pageable page) {
         return userService.list(page).toList();
     }
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable long id) {
@@ -37,6 +40,7 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<Errors> registerUser(@RequestBody UserRegistrationRequest request, Errors errors) {

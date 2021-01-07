@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.OrderDto;
 import pl.github.dominik.ecommerce.application.OrderService;
 
-import javax.persistence.criteria.Order;
-
 import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
@@ -23,12 +21,14 @@ public class OrderController {
 
     private final OrderRequestValidator orderRequestValidator;
 
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable long id) {
         return orderService.get(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<Errors> makeOrder(@RequestBody OrderRequest request, Errors errors) {

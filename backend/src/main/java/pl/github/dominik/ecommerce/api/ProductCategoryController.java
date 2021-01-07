@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.*;
@@ -24,10 +25,12 @@ public class ProductCategoryController {
 
     private final CreateProductCategoryRequestValidator createProductCategoryRequestValidator;
 
+
     @GetMapping(path = "")
     public List<ProductCategoryDto> listProductCategories(@RequestParam(required = false) Long root) {
         return productCategoryService.list(root);
     }
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity <ProductCategoryDto> getProductCategory(@PathVariable long id) {
@@ -35,6 +38,7 @@ public class ProductCategoryController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<Errors> addProductCategory(@RequestBody CreateProductCategoryRequest request, Errors errors) {
@@ -48,6 +52,7 @@ public class ProductCategoryController {
         return ResponseEntity.badRequest().build();
         }
     }
+
 
     @PutMapping(path = "/{productCategoryId}", consumes = "application/json")
     public ResponseEntity<ProductCategoryDto> updateProductCategory(@PathVariable long productCategoryId,
@@ -65,6 +70,7 @@ public class ProductCategoryController {
             return ResponseEntity.badRequest().build();
         }
     }
+
 
     @DeleteMapping(path = "/{productCategoryId}", consumes = "application/json")
     public ResponseEntity<Errors> removeProductCategory(@PathVariable long productCategoryId,@RequestParam(defaultValue = "false") boolean wholeSubtree) {

@@ -7,10 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.github.dominik.ecommerce.api.CreateProductRequest;
 import pl.github.dominik.ecommerce.domain.ProductRepository;
+import pl.github.dominik.ecommerce.domain.ProductType;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ public class ProductService {
     private final ProductRepository repository;
 
     private final ProductDomainDtoConverter converter;
+
+    private final ProductCategoryService categoryService;
 
     public Page<ProductDto> list(@NonNull Pageable page) {
         return repository.findAll(page).map(converter::convert);
@@ -51,5 +54,16 @@ public class ProductService {
 
     public Page<ProductDto> findByAuthor(long productCategoryId, @NonNull Pageable page) {
         return repository.findByAuthorId(productCategoryId, page).map(converter::convert);
+    }
+
+    public Page<ProductDto> search(String name, String type, Long categoryId, Double minPrice, Double maxPrice, Pageable page) {
+        return repository.search(
+                Optional.ofNullable(name).map(String::toLowerCase).orElse(null),
+                type != null ? ProductType.valueOf(type) : null,
+                categoryService.list(categoryId).stream().map(ProductCategoryDto::getId).collect(Collectors.toUnmodifiableSet()),
+                minPrice,
+                maxPrice,
+                page)
+                .map(converter::convert);
     }
 }

@@ -72,7 +72,7 @@ public class SampleDataFixture {
         szmata = productRepository.save(Product.builder()
                 .title("Szmata")
                 .description("Stara, podarta, ale lepsza niz nic")
-                .thumbnailUrl("http://google.com")
+                .thumbnailUrl("https://c.allegroimg.com/original/01f1c8/76c094d142678adc5092eb020b5c/SZARA-SCIERKA-DO-PODLOGI-szmata-czysciwo-szmatka")
                 .price(1.00)
                 .author(janKowalski)
                 .category(clothes)
@@ -91,7 +91,7 @@ public class SampleDataFixture {
 
         admin = userRepository.save(User.builder()
                 .login("admmin@example.com")
-                .password("{noop")
+                .password("noop")
                 .role(User.Role.ADMIN)
                 .contactPreference(User.ContactPreference.EMAIL)
                 .avatarUrl("http://google.com")
@@ -110,7 +110,7 @@ public class SampleDataFixture {
                 .country("Nowhere")
                 .city("Nowhere")
                 .street("Homeless")
-                .zipCode("00-000")
+                .zipCode("00-001")
                 .build());
     }
 
@@ -119,6 +119,7 @@ public class SampleDataFixture {
         productRepository.deleteAll();
         productCategoryRepository.deleteAll();
         authorRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private Author generateAuthor(String fullName) {

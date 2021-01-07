@@ -3,11 +3,13 @@ package pl.github.dominik.ecommerce.configuration;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import lombok.val;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -16,13 +18,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Security;
+import java.util.Collections;
 import java.util.Optional;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer";
+
     private final UserDetailsService userDetailsService;
     private final String secret;
 
@@ -37,12 +40,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                  FilterChain filterChain) throws IOException, ServletException {
-        getAuthentication(request)
-                .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
+        getAuthentication(request).ifPresent(authentication ->
+                SecurityContextHolder.getContext().setAuthentication(authentication));
+
         filterChain.doFilter(request, response);
     }
 
-    private Optional<UsernamePasswordAuthenticationToken> getAuthentication(HttpServletRequest request) {
+    private Optional<Authentication> getAuthentication(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(TOKEN_HEADER))
                 .filter(tokenHeader -> tokenHeader.startsWith(TOKEN_PREFIX))
                 .map(tokenHeader -> tokenHeader.substring(TOKEN_PREFIX.length()))

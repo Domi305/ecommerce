@@ -10,9 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.AuthorDto;
 import pl.github.dominik.ecommerce.application.AuthorService;
-import pl.github.dominik.ecommerce.application.ProductDto;
 import pl.github.dominik.ecommerce.application.ProductService;
-import pl.github.dominik.ecommerce.domain.Product;
 
 import java.util.List;
 
@@ -29,10 +27,12 @@ public class AuthorController {
 
     private final ProductService productService;
 
+
     @GetMapping(path = "")
     public List<AuthorDto> listAuthors(Pageable page) {
         return authorService.list(page).toList();
     }
+
 
     @GetMapping(path = "/{id}")
     public ResponseEntity <AuthorDto> getAuthor(@PathVariable long id) {
@@ -40,6 +40,7 @@ public class AuthorController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping(path = "", consumes = "application/json")
     public ResponseEntity<Void> addAuthor(@RequestBody AddAuthor request, Errors errors) {
@@ -53,6 +54,7 @@ public class AuthorController {
         return ResponseEntity.badRequest().build();
         }
     }
+
 
     @DeleteMapping(path = "/{authorId}", consumes = "application/json")
     public ResponseEntity<Void> removeAuthor(@PathVariable long authorId) {
