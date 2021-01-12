@@ -23,7 +23,7 @@ class ProductPage extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return state.products[ownProps.productId] || {productId: ownProps.productId}
+    return state.products.byId[ownProps.productId] || {productId: ownProps.productId}
 }
 
 const mapDispatchToProps = (dispatch, ownPops) => {

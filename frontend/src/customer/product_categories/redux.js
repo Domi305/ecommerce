@@ -1,14 +1,18 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import api from "../../api";
 
-export const getAllProductCategories = createAsyncThunk("GET_ALL_PRODUCT_CATEGORIES", async () => {
-    let response = await api.get("http://localhost:8080/products/categories");
-    return response.data
+export const getAllProductCategories = createAsyncThunk("GET_ALL_PRODUCT_CATEGORIES", async (_, thunkAPI) => {
+    //if (thunkAPI.getState().product_categories.length == 0) {
+        let response = await api.get("http://localhost:8080/products/categories");
+        return response.data
+/*    } else {
+        return thunkAPI.getState().product_categories;
+    }*/
 });
 
 export const productCategorySlice = createSlice({
     name: 'product_categories',
-    initialState: {tree: []},
+    initialState: {tree: [], byId: {}},
     reducers: {
         // standard reducer logic, with auto-generated action types per reducer
     },
@@ -19,6 +23,7 @@ export const productCategorySlice = createSlice({
             delete forest[null];
 
             state.tree = roots;
+            state.byId = forest;
         }
     }
 })

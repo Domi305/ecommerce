@@ -10,6 +10,7 @@ import pl.github.dominik.ecommerce.domain.*;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Profile({"sample-data", "test"})
 @Component
@@ -69,25 +70,13 @@ public class SampleDataFixture {
         stillDrinks = generateCategory("Napoje niegazowane", drinks);
         fizzyDrinks = generateCategory("Napoje gazowane", drinks);
 
-        szmata = productRepository.save(Product.builder()
-                .title("Szmata")
-                .description("Stara, podarta, ale lepsza niz nic")
-                .thumbnailUrl("https://c.allegroimg.com/original/01f1c8/76c094d142678adc5092eb020b5c/SZARA-SCIERKA-DO-PODLOGI-szmata-czysciwo-szmatka")
-                .price(1.00)
-                .author(janKowalski)
-                .category(clothes)
-                .type(ProductType.CLOTHES)
-                .build());
+        szmata = productRepository.save(szmataBuilder().build());
+        buty = productRepository.save(butyBuilder().build());
 
-        buty = productRepository.save(Product.builder()
-                .title("Buty")
-                .description("Lepsze to niz chodzic na bosaka")
-                .thumbnailUrl("http://google.com")
-                .price(1.00)
-                .author(janKowalski)
-                .category(clothes)
-                .type(ProductType.CLOTHES)
-                .build());
+        for (int i = 0; i < 20; ++i) {
+            productRepository.save(szmataBuilder().build());
+            productRepository.save(butyBuilder().build());
+        }
 
         admin = userRepository.save(User.builder()
                 .login("admmin@example.com")
@@ -112,6 +101,28 @@ public class SampleDataFixture {
                 .street("Homeless")
                 .zipCode("00-001")
                 .build());
+    }
+
+    private Product.ProductBuilder szmataBuilder() {
+        return Product.builder()
+                .title("Szmata")
+                .description("Stara, podarta, ale lepsza niz nic")
+                .thumbnailUrl("https://c.allegroimg.com/original/01f1c8/76c094d142678adc5092eb020b5c/SZARA-SCIERKA-DO-PODLOGI-szmata-czysciwo-szmatka")
+                .price(ThreadLocalRandom.current().nextDouble(1, 100))
+                .author(janKowalski)
+                .category(clothes)
+                .type(ProductType.CLOTHES);
+    }
+
+    private Product.ProductBuilder butyBuilder() {
+        return Product.builder()
+                .title("Buty")
+                .description("Lepsze to niz chodzic na bosaka")
+                .thumbnailUrl("https://www.hokaoneone.eu/dw/image/v2/BCQW_PRD/on/demandware.static/-/Sites-HOKA-EMEA-master/default/dw39744ee4/images/white/1104093-IBMR_1.jpg?sw=483&sh=447&sm=fit&sfrm=jpg&bgcolor=ffffff")
+                .price(ThreadLocalRandom.current().nextDouble(1, 100))
+                .author(janKowalski)
+                .category(clothes)
+                .type(ProductType.CLOTHES);
     }
 
     public void remove() {

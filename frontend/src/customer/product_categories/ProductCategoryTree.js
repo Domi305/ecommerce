@@ -25,7 +25,7 @@ class ProductCategoryTree extends Component {
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpanded={['root']}
                 defaultExpandIcon={<ChevronRightIcon />}
-            >
+                onNodeSelect={(event, nodeId) => this.props.onCategorySelect(nodeId)}>
                 {this.props.nodes.map(renderTree)}
             </TreeView>
         );
