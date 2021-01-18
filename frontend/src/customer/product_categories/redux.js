@@ -1,13 +1,13 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, createSelector} from '@reduxjs/toolkit';
 import api from "../../api";
 
 export const getAllProductCategories = createAsyncThunk("GET_ALL_PRODUCT_CATEGORIES", async (_, thunkAPI) => {
     //if (thunkAPI.getState().product_categories.length == 0) {
-        let response = await api.get("http://localhost:8080/products/categories");
-        return response.data
-/*    } else {
-        return thunkAPI.getState().product_categories;
-    }*/
+    let response = await api.get("http://localhost:8080/products/categories");
+    return response.data
+    /*    } else {
+            return thunkAPI.getState().product_categories;
+        }*/
 });
 
 export const productCategorySlice = createSlice({
@@ -43,6 +43,17 @@ function createTree(treeItems) {
         parentCategory.children.push(childCategory);
         childCategory.parentId = parentCategory.id
     }
-
     return treeItemById;
 }
+
+export const ancestorsOf = categoryId => (state => {
+    let result = [];
+    let currentCategory = state.byId[categoryId];
+
+    while (currentCategory != null) {
+        result.unshift(currentCategory)
+        currentCategory = state.byId[currentCategory.parentId];
+    }
+
+    return result;
+})

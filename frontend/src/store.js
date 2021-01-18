@@ -8,6 +8,6 @@ const store = configureStore({
         products: productSlice.reducer,
         product_categories: productCategorySlice.reducer
     }
-})
+});
 
 export default store;
