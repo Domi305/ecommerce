@@ -45,7 +45,7 @@ export default class PriceRangeFilter extends PureComponent {
         const value = parseInt(event.target.value);
 
         this.props.onChange({
-            minPrice: value > 0 ? value: 0,
+            minPrice: value > 0 ? value : 0,
             maxPrice: this.props.maxPrice,
         })
     }

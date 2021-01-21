@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getProduct} from './redux';
 import {Typography, Paper} from "@material-ui/core";
@@ -15,7 +15,7 @@ class ProductPage extends Component {
             <Paper style={{padding: "1em"}}>
                 <Typography variant="h4" gutterBottom>{this.props.title}</Typography>
                 <Price value={this.props.price}/>
-                <img src={this.props.thumbnailUrl} style={{maxWidth: "100%",  maxHeight: "100%"}}/>
+                <img src={this.props.thumbnailUrl} style={{maxWidth: "100%", maxHeight: "100%"}}/>
                 <Typography variant={"body1"}>{this.props.description}</Typography>
             </Paper>
         );

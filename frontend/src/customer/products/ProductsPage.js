@@ -47,7 +47,8 @@ class ProductsPage extends Component {
                                             goToNextPage={() => this.props.changePage(this.props.page.no + 1)}/>
                             </Grid>
                             <Grid item xs={12}>
-                                <ProductsGrid products={this.props.products} addToBasket={this.props.addToBasket}/></Grid>
+                                <ProductsGrid products={this.props.products}
+                                              addToBasket={this.props.addToBasket}/></Grid>
                         </Grid>
                     </Grid>
                 </Grid>

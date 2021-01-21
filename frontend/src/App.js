@@ -13,6 +13,8 @@ import './App.css';
 import BasketPage from "./customer/basket/BasketPage";
 import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import OrderDeliveryPage from "./customer/order/OrderDeliveryPage";
+import OrderCompletePage from "./customer/order/OrderCompletePage";
 
 const sections = [
     {title: "Kategoria 1", url: "https://google.co.uk"},
@@ -31,7 +33,7 @@ export default function App() {
                 <main>
                     <Grid item xs={12} md={8}>
                         <Typography variant="h6" gutterBottom>Ecommerce Project</Typography>
-                        <RouterLink to={"/basket"}><IconButton><ShoppingCartIcon /></IconButton></RouterLink>
+                        <RouterLink to={"/basket"}><IconButton><ShoppingCartIcon/></IconButton></RouterLink>
                         <Divider/>
                         <Toolbar component="nav" variant="dense">
                             {sections.map((section) => (
@@ -56,6 +58,12 @@ export default function App() {
                         </Route>
                         <Route exact path="/basket">
                             <Page><BasketPage/></Page>
+                        </Route>
+                        <Route exact path="/order/delivery">
+                            <Page><OrderDeliveryPage/></Page>
+                        </Route>
+                        <Route exact path="/order/complete">
+                            <Page><OrderCompletePage/></Page>
                         </Route>
                     </Switch>
                 </main>

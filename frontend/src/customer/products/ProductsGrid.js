@@ -19,7 +19,10 @@ export default function ProductsGrid(props) {
 
     return (
         <Grid container direction="row" justify="flex-start" alignItems="flex-start" spacing={1}>
-            {props.products.map(product => <Grid item>{ProductGridItem({...product, addToBasket: props.addToBasket})}</Grid>)}
+            {props.products.map(product => <Grid item>{ProductGridItem({
+                ...product,
+                addToBasket: props.addToBasket
+            })}</Grid>)}
         </Grid>
     );
 }
@@ -51,8 +54,8 @@ function ProductGridItem(props) {
             </CardActionArea>
             <CardActions>
                 <RouterLink to={"/products/" + props.id}>
-                <IconButton size="small"><MoreIcon/> </IconButton>
-                    </RouterLink>
+                    <IconButton size="small"><MoreIcon/> </IconButton>
+                </RouterLink>
                 <IconButton size="small"><ShoppingBasketIcon onClick={() => props.addToBasket(props.id)}/></IconButton>
             </CardActions>
         </Card>
