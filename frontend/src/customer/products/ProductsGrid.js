@@ -6,19 +6,20 @@ import {
     CardMedia,
     CardActions,
     Typography,
-    Button,
-    Link
 } from "@material-ui/core";
 import React from "react";
 import Price from "./Price";
 import {Link as RouterLink} from "react-router-dom";
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import IconButton from "@material-ui/core/IconButton";
+import MoreIcon from '@material-ui/icons/More';
 
 
 export default function ProductsGrid(props) {
 
     return (
         <Grid container direction="row" justify="flex-start" alignItems="flex-start" spacing={1}>
-            {props.products.map(product => <Grid item>{ProductGridItem(product)}</Grid>)}
+            {props.products.map(product => <Grid item>{ProductGridItem({...product, addToBasket: props.addToBasket})}</Grid>)}
         </Grid>
     );
 }
@@ -49,12 +50,10 @@ function ProductGridItem(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
-                    <RouterLink to={"/products/" + props.id}>Szczegóły</RouterLink>
-                </Button>
-                <Button size="small" color="primary" disabled={true}>
-                    Dodaj do koszyka
-                </Button>
+                <RouterLink to={"/products/" + props.id}>
+                <IconButton size="small"><MoreIcon/> </IconButton>
+                    </RouterLink>
+                <IconButton size="small"><ShoppingBasketIcon onClick={() => props.addToBasket(props.id)}/></IconButton>
             </CardActions>
         </Card>
     );

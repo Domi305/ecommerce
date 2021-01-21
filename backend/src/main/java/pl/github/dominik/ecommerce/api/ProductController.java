@@ -2,16 +2,14 @@ package pl.github.dominik.ecommerce.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.github.dominik.ecommerce.application.ProductDto;
 import pl.github.dominik.ecommerce.application.ProductService;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
@@ -26,14 +24,14 @@ public class  ProductController {
 
 
     @GetMapping(path = "")
-    public List<ProductDto> listProducts(
+    public Page<ProductDto> listProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
     Pageable page) {
-        return productService.search(name, type, categoryId, minPrice, maxPrice, page).toList();
+        return productService.search(name, type, categoryId, minPrice, maxPrice, page);
     }
 
 
